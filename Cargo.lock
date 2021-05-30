@@ -102,9 +102,11 @@ checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 
 [[package]]
 name = "evalexpr"
-version = "6.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b6b70d8d6fc500f759d57f44bca1474a096e0adba72e5d23438d1d41c09cec3"
+version = "6.0.1-alpha.0"
+source = "git+https://github.com/olback/evalexpr?branch=math-consts-functions#712290801d18525404096ffa9b5f8cd638112045"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "form_urlencoded"
@@ -273,6 +275,17 @@ dependencies = [
  "pango-sys",
  "pkg-config",
  "system-deps",
+]
+
+[[package]]
+name = "giftwrap"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d9e1128f9d3fb88c46f5cb72f06d6df3ec55fdffafdb0de2352fbb809b478bf5"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -539,6 +552,10 @@ name = "math-expr-eval"
 version = "0.1.0"
 dependencies = [
  "evalexpr",
+ "gdk",
+ "giftwrap",
+ "gio",
+ "glib",
  "gtk",
  "last-git-commit",
  "regex",

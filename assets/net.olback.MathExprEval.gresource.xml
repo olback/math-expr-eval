@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+
+    <gresource prefix="/net/olback/mathexpreval">
+        <!-- UI -->
+        {ui-files}
+
+        <!-- CSS -->
+        <file alias="css/app.css">assets/css/app.css</file>
+
+        <!-- Logo / Icon -->
+        <!-- <file alias="icons/barium-about.png" preprocess="to-pixdata">assets/icons/apps/barium-about.png</file> -->
+    </gresource>
+
+</gresources>
