@@ -1,11 +1,12 @@
 use {
     crate::{get_obj, resource},
+    gio::{prelude::*, SimpleAction, SimpleActionGroup},
     glib::clone,
     gtk::{
         prelude::*, AboutDialog, ApplicationWindow, Builder, Button, Clipboard, Entry, Notebook,
         TextBuffer, TextView,
     },
-    std::rc::Rc,
+    std::{cell::RefCell, path::PathBuf, rc::Rc},
 };
 
 #[derive(Debug)]
@@ -17,10 +18,12 @@ pub struct Ui {
     notebook: Notebook,
     about_button: Button,
     about_dialog: AboutDialog,
+    edited: RefCell<bool>,
+    path: RefCell<Option<PathBuf>>,
 }
 
 impl Ui {
-    pub fn new() -> Option<Rc<Self>> {
+    pub fn new() -> Rc<Self> {
         let b = Builder::from_resource(resource!("ui/main"));
 
         let this = Rc::new(Self {
@@ -31,6 +34,8 @@ impl Ui {
             notebook: get_obj!(b, "notebook"),
             about_button: get_obj!(b, "about-button"),
             about_dialog: get_obj!(b, "about-dialog"),
+            edited: RefCell::new(false),
+            path: RefCell::new(None),
         });
 
         // About dialog
@@ -40,6 +45,7 @@ impl Ui {
                 this.about_dialog.hide();
             }));
 
+        // Copy result (secondary icon click)
         this.result
             .connect_icon_release(|entry, pos, _evt_btn| match pos {
                 gtk::EntryIconPosition::Secondary => {
@@ -53,15 +59,78 @@ impl Ui {
         this.input_buffer
             .connect_changed(clone!(@strong this => move |_| this.eval()));
 
-        Some(this)
+        let file_ag = this.new_action_group("file");
+
+        let open_action = SimpleAction::new("open", None);
+        open_action.connect_activate(clone!(@strong this => move |_, _| {
+            if *this.edited.borrow() {
+                println!("open, edited");
+            } else {
+                println!("open, unedited");
+            }
+        }));
+        file_ag.add_action(&open_action);
+
+        let save_action = SimpleAction::new("save", None);
+        save_action.connect_activate(clone!(@strong this => move |_, _| {
+            if *this.edited.borrow() {
+                println!("save, edited");
+            } /* else {} */ // No point in saving if no changes are made
+        }));
+        file_ag.add_action(&save_action);
+
+        this
+    }
+
+    pub fn set_input(&self, content: &str) {
+        self.input_buffer.set_text(content);
+    }
+
+    pub fn set_result(&self, result: &str) {
+        self.result.set_text(result);
     }
 
     pub fn set_app(&self, app: &gtk::Application) {
         self.main_window.set_application(Some(app));
     }
 
+    pub fn new_action_group(&self, name: &str) -> SimpleActionGroup {
+        let ag = SimpleActionGroup::new();
+        self.main_window.insert_action_group(name, Some(&ag));
+        ag
+    }
+
+    pub fn show_math(&self) {
+        self.notebook.set_current_page(Some(0));
+    }
+
+    pub fn show_help(&self) {
+        self.notebook.set_current_page(Some(1));
+    }
+
     pub fn show(&self) {
         self.main_window.show_all();
+        self.update_title();
+    }
+
+    pub fn set_path(&self, path: PathBuf) {
+        self.path.replace(Some(path));
+    }
+
+    fn update_title(&self) {
+        let text = match self
+            .path
+            .borrow()
+            .as_ref()
+            .and_then(|p| p.to_str().and_then(|p| Some(p.to_string())))
+        {
+            Some(p) => format!("Math Expr Eval - {}", p),
+            None => String::from("Math Expr Eval"),
+        };
+        match *self.edited.borrow() {
+            true => self.main_window.set_title(&format!("⏺ {}", text)),
+            false => self.main_window.set_title(&text),
+        }
     }
 
     fn eval(&self) {
@@ -78,14 +147,14 @@ impl Ui {
         ) {
             Ok(val) => match val {
                 evalexpr::Value::Empty => {
-                    self.result.set_text("");
+                    self.set_result("");
                 }
                 v => {
-                    self.result.set_text(&v.to_string());
+                    self.set_result(&v.to_string());
                 }
             },
             Err(e) => {
-                self.result.set_text(&e.to_string());
+                self.set_result(&e.to_string());
             }
         }
     }

@@ -6,6 +6,4 @@ pub type MEEResult<T> = std::result::Result<T, Error>;
 pub enum Error {
     Glib(glib::Error),
     Bool(glib::BoolError),
-    #[noWrap]
-    None,
 }

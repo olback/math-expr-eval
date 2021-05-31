@@ -296,6 +296,7 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                 <property name="can-focus">True</property>
                 <property name="editable">False</property>
                 <property name="secondary-icon-name">edit-copy</property>
+                <property name="secondary-icon-tooltip-text" translatable="yes">Click to copy</property>
                 <property name="placeholder-text" translatable="yes">Result...</property>
                 <style>
                   <class name="big"/>
@@ -654,8 +655,8 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                     </child>
                     <child>
                       <object class="GtkBox">
+                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="no-show-all">True</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">6</property>
                         <child>
@@ -676,7 +677,7 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                           </packing>
                         </child>
                         <child>
-                          <!-- n-columns=2 n-rows=3 -->
+                          <!-- n-columns=2 n-rows=6 -->
                           <object class="GtkGrid">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
@@ -688,6 +689,9 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="can-focus">False</property>
                                 <property name="halign">start</property>
                                 <property name="label" translatable="yes">Copy result</property>
+                                <attributes>
+                                  <attribute name="strikethrough" value="True"/>
+                                </attributes>
                               </object>
                               <packing>
                                 <property name="left-attach">0</property>
@@ -700,6 +704,9 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="can-focus">False</property>
                                 <property name="halign">start</property>
                                 <property name="label" translatable="yes">&lt;Ctrl&gt; + c</property>
+                                <attributes>
+                                  <attribute name="strikethrough" value="True"/>
+                                </attributes>
                               </object>
                               <packing>
                                 <property name="left-attach">1</property>
@@ -754,6 +761,78 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="top-attach">2</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Save file</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">&lt;Ctrl&gt; + s</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Open file</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">&lt;Ctrl&gt; + o</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Quit</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">&lt;Ctrl&gt; + q, &lt;Ctrl&gt; + w </property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">5</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -769,15 +848,44 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="about-button">
-                        <property name="label" translatable="yes">About</property>
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="receives-default">True</property>
-                        <property name="halign">end</property>
+                        <property name="can-focus">False</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">{version}</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="about-button">
+                            <property name="label" translatable="yes">About</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="halign">end</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">4</property>
                       </packing>
