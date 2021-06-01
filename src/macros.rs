@@ -10,6 +10,12 @@ macro_rules! get_obj {
             }
         }
     };
+    ($builder:expr, $rtype:ty, $id:expr) => {
+        match $builder.get_object::<$rtype>($id) {
+            Some(o) => o,
+            None => panic!("could not get {}", $id),
+        }
+    };
 }
 
 #[macro_export]

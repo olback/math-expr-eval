@@ -8,6 +8,6 @@ pub fn get_version() -> String {
     format!("{}-{}", cargo_version, lgc.id().short())
 }
 
-pub fn write_version(version: &String) {
+pub fn write_version(version: &str) {
     fs::write("out/version.txt", version).unwrap();
 }

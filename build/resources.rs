@@ -29,7 +29,7 @@ impl ToString for ResourceFile {
     }
 }
 
-pub fn generate_xml(glade_files: &Vec<PathBuf>) {
+pub fn generate_xml(glade_files: &[PathBuf]) {
     const INPUT: &str = "assets/net.olback.MathExprEval.gresource.xml";
     const TARGET: &str = "out/net.olback.MathExprEval.gresource.xml";
 

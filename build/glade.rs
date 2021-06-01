@@ -1,59 +1,55 @@
 use regex::Regex;
-use std::{io, fs::{self, DirEntry}, path::{Path, PathBuf}};
+use std::{
+    fs::{self, DirEntry},
+    io,
+    path::{Path, PathBuf},
+};
 
 pub struct GladeData<'a> {
     pub version: &'a String,
-    pub authors: &'static str
+    pub authors: &'static str,
 }
 
 impl<'a> GladeData<'a> {
-
     pub fn get_version_string(&self) -> &'a String {
-
         self.version
-
     }
 
     pub fn get_authors_string(&self) -> String {
-
-        self.authors.clone()
+        self.authors
             .replace(":", "\n")
             .replace("<", "&lt;")
             .replace(">", "&gt;")
-
     }
-
 }
 
 // Mostly stolen from the rust docs
 // https://doc.rust-lang.org/std/fs/fn.read_dir.html
 
 // one possible implementation of walking a directory only visiting files
-fn visit_dirs(processed: &mut Vec<PathBuf>, dir: &Path, cb: &dyn Fn(&DirEntry, &mut Vec<PathBuf>)) -> io::Result<()> {
-
+fn visit_dirs(
+    processed: &mut Vec<PathBuf>,
+    dir: &Path,
+    cb: &dyn Fn(&DirEntry, &mut Vec<PathBuf>),
+) -> io::Result<()> {
     if dir.is_dir() {
-
         for entry in fs::read_dir(dir)? {
-
             let entry = entry?;
             let path = entry.path();
 
             if path.is_dir() {
                 visit_dirs(processed, &path, cb)?;
-            } else if !path.to_string_lossy().contains("~") && !path.to_string_lossy().contains("#") {
+            } else if !path.to_string_lossy().contains('~') && !path.to_string_lossy().contains('~')
+            {
                 cb(&entry, processed);
             }
-
         }
-
     }
 
     Ok(())
-
 }
 
 pub fn process(data: &GladeData) -> Vec<PathBuf> {
-
     let path = PathBuf::from("assets/ui");
     let re_resource = Regex::new(r"(?P<r>resource:/)(?P<p>[a-z])").unwrap();
     let re_version = Regex::new(r"(?P<r>\{version\})").unwrap();
@@ -62,7 +58,6 @@ pub fn process(data: &GladeData) -> Vec<PathBuf> {
     let mut processed_files = Vec::<PathBuf>::new();
 
     visit_dirs(&mut processed_files, &path, &|entry, processed| {
-
         println!("{}", entry.path().to_string_lossy());
 
         let in_path = entry.path();
@@ -84,9 +79,8 @@ pub fn process(data: &GladeData) -> Vec<PathBuf> {
         fs::write(&out_path, after.to_owned().as_bytes()).unwrap();
 
         processed.push(out_path);
-
-    }).unwrap();
+    })
+    .unwrap();
 
     processed_files
-
 }

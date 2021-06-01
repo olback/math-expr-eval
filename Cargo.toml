@@ -1,6 +1,6 @@
 [package]
 name = "math-expr-eval"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Edwin Svensson <math-expr-eval@olback.net>"]
 edition = "2018"
 build = "build/build.rs"

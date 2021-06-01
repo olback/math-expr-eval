@@ -14,7 +14,7 @@ mod error;
 mod macros;
 mod ui;
 
-const RESOURCE_BYTES: &'static [u8] = include_bytes!("../out/mathexpreval.gresource");
+const RESOURCE_BYTES: &[u8] = include_bytes!("../out/mathexpreval.gresource");
 
 fn main() -> MEEResult<()> {
     // Load resources
@@ -34,7 +34,7 @@ fn main() -> MEEResult<()> {
     // Create app
     let app = Application::new(
         Some("net.olback.MathExprEval"),
-        ApplicationFlags::HANDLES_OPEN, /*| ApplicationFlags::HANDLES_COMMAND_LINE,*/
+        ApplicationFlags::HANDLES_OPEN | ApplicationFlags::NON_UNIQUE,
     )?;
 
     // Keyboard shortcuts
@@ -61,11 +61,11 @@ fn main() -> MEEResult<()> {
     app.connect_handle_local_options(|_, dict| {
         if let Some(path) = dict
             .lookup_value("eval", None)
-            .and_then(|v| Some(v.get_data_as_bytes()))
+            .map(|v| v.get_data_as_bytes())
             .and_then(|b| {
                 std::str::from_utf8(&(*b)[..b.len() - 1])
                     .ok()
-                    .and_then(|s| Some(s.trim().to_string()))
+                    .map(|s| s.trim().to_string())
             })
         {
             match fs::read_to_string(path) {
@@ -135,7 +135,7 @@ fn main() -> MEEResult<()> {
     }));
 
     app.connect_shutdown(move |_| {
-        println!("TODO: Is file saved?");
+        ui_ref.quit();
     });
 
     app.run(&std::env::args().collect::<Vec<String>>());
