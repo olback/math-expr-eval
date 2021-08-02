@@ -54,8 +54,11 @@ fn main() -> MEEResult<()> {
         Some("FILE"),
     );
 
+    // Load settings
+    let settings = gio::Settings::new("net.olback.MathExprEval");
+
     // Create ui
-    let ui_ref = Ui::new();
+    let ui_ref = Ui::new(&settings);
 
     // Handle args
     app.connect_handle_local_options(|_, dict| {

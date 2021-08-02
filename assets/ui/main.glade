@@ -85,6 +85,165 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
     </data>
   </object>
   <object class="GtkTextBuffer" id="input-buffer"/>
+  <object class="GtkListStore" id="operators">
+    <columns>
+      <!-- column-name operator -->
+      <column type="gchararray"/>
+      <!-- column-name precedence -->
+      <column type="gint"/>
+      <!-- column-name description -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">^</col>
+        <col id="1">120</col>
+        <col id="2" translatable="yes">Exponentiation</col>
+      </row>
+      <row>
+        <col id="0">*</col>
+        <col id="1">100</col>
+        <col id="2" translatable="yes">Product</col>
+      </row>
+      <row>
+        <col id="0">/</col>
+        <col id="1">100</col>
+        <col id="2" translatable="yes">Division</col>
+      </row>
+      <row>
+        <col id="0">%</col>
+        <col id="1">100</col>
+        <col id="2" translatable="yes">Modulo</col>
+      </row>
+      <row>
+        <col id="0">+</col>
+        <col id="1">95</col>
+        <col id="2" translatable="yes">Sum or String Concatenation</col>
+      </row>
+      <row>
+        <col id="0">-</col>
+        <col id="1">95</col>
+        <col id="2" translatable="yes">Difference</col>
+      </row>
+      <row>
+        <col id="0">&lt;</col>
+        <col id="1">80</col>
+        <col id="2" translatable="yes">Lower than</col>
+      </row>
+      <row>
+        <col id="0">&gt;</col>
+        <col id="1">80</col>
+        <col id="2" translatable="yes">Greater than</col>
+      </row>
+      <row>
+        <col id="0">&lt;=</col>
+        <col id="1">80</col>
+        <col id="2" translatable="yes">Lower than or equal</col>
+      </row>
+      <row>
+        <col id="0">&gt;=</col>
+        <col id="1">80</col>
+        <col id="2" translatable="yes">Greater than or equal</col>
+      </row>
+      <row>
+        <col id="0">==</col>
+        <col id="1">80</col>
+        <col id="2" translatable="yes">Equal</col>
+      </row>
+      <row>
+        <col id="0">!=</col>
+        <col id="1">80</col>
+        <col id="2" translatable="yes">Not equal</col>
+      </row>
+      <row>
+        <col id="0">&amp;&amp;</col>
+        <col id="1">75</col>
+        <col id="2" translatable="yes">Logical and</col>
+      </row>
+      <row>
+        <col id="0">||</col>
+        <col id="1">70</col>
+        <col id="2" translatable="yes">Logical or</col>
+      </row>
+      <row>
+        <col id="0">=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Assignment</col>
+      </row>
+      <row>
+        <col id="0">+=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Sum-Assignment or String-Concatenation-Assignment</col>
+      </row>
+      <row>
+        <col id="0">-=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Difference-Assignment</col>
+      </row>
+      <row>
+        <col id="0">*=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Product-Assignment</col>
+      </row>
+      <row>
+        <col id="0">/=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Division-Assignment</col>
+      </row>
+      <row>
+        <col id="0">%=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Modulo-Assignment</col>
+      </row>
+      <row>
+        <col id="0">^=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Exponentiation-Assignment</col>
+      </row>
+      <row>
+        <col id="0">&amp;&amp;=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Logical-And-Assignment</col>
+      </row>
+      <row>
+        <col id="0">||=</col>
+        <col id="1">50</col>
+        <col id="2" translatable="yes">Logical-Or-Assignment</col>
+      </row>
+      <row>
+        <col id="0">,</col>
+        <col id="1">40</col>
+        <col id="2" translatable="yes">Aggregation</col>
+      </row>
+      <row>
+        <col id="0">;</col>
+        <col id="1">0</col>
+        <col id="2" translatable="yes">Expression Chaining</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="unary-operators">
+    <columns>
+      <!-- column-name operator -->
+      <column type="gchararray"/>
+      <!-- column-name precedence -->
+      <column type="gint"/>
+      <!-- column-name description -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">-</col>
+        <col id="1">110</col>
+        <col id="2" translatable="yes">Negation</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">!</col>
+        <col id="1">110</col>
+        <col id="2" translatable="yes">Logical not</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkApplicationWindow" id="main-window">
     <property name="can-focus">False</property>
     <property name="window-position">center</property>
@@ -274,6 +433,9 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="fixed-height-mode">True</property>
                                 <property name="enable-grid-lines">both</property>
                                 <property name="enable-tree-lines">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
@@ -370,6 +532,9 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="fixed-height-mode">True</property>
                                 <property name="enable-grid-lines">both</property>
                                 <property name="enable-tree-lines">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
@@ -465,6 +630,9 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="search-column">0</property>
                                 <property name="enable-grid-lines">both</property>
                                 <property name="enable-tree-lines">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
                                 <child>
                                   <object class="GtkTreeViewColumn">
                                     <property name="sizing">fixed</property>
@@ -788,12 +956,86 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <!-- n-columns=2 n-rows=3 -->
+              <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="row-spacing">12</property>
+                <property name="column-spacing">6</property>
                 <child>
-                  <placeholder/>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Settings</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                      <attribute name="scale" value="2"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
+                    <property name="width">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="hexpand">False</property>
+                        <property name="label" translatable="yes">Ask to save before closing</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="hexpand">False</property>
+                        <property name="label" translatable="yes">Ask to save the document if it has been changed before closing.</property>
+                        <property name="wrap">True</property>
+                        <property name="wrap-mode">word-char</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="ask-save-switch">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">1</property>
+                  </packing>
                 </child>
                 <child>
                   <placeholder/>
@@ -870,164 +1112,5 @@ along with .  If not, see <http://www.gnu.org/licenses/>.
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="operators">
-    <columns>
-      <!-- column-name operator -->
-      <column type="gchararray"/>
-      <!-- column-name precedence -->
-      <column type="gint"/>
-      <!-- column-name description -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">^</col>
-        <col id="1">120</col>
-        <col id="2" translatable="yes">Exponentiation</col>
-      </row>
-      <row>
-        <col id="0">*</col>
-        <col id="1">100</col>
-        <col id="2" translatable="yes">Product</col>
-      </row>
-      <row>
-        <col id="0">/</col>
-        <col id="1">100</col>
-        <col id="2" translatable="yes">Division</col>
-      </row>
-      <row>
-        <col id="0">%</col>
-        <col id="1">100</col>
-        <col id="2" translatable="yes">Modulo</col>
-      </row>
-      <row>
-        <col id="0">+</col>
-        <col id="1">95</col>
-        <col id="2" translatable="yes">Sum or String Concatenation</col>
-      </row>
-      <row>
-        <col id="0">-</col>
-        <col id="1">95</col>
-        <col id="2" translatable="yes">Difference</col>
-      </row>
-      <row>
-        <col id="0">&lt;</col>
-        <col id="1">80</col>
-        <col id="2" translatable="yes">Lower than</col>
-      </row>
-      <row>
-        <col id="0">&gt;</col>
-        <col id="1">80</col>
-        <col id="2" translatable="yes">Greater than</col>
-      </row>
-      <row>
-        <col id="0">&lt;=</col>
-        <col id="1">80</col>
-        <col id="2" translatable="yes">Lower than or equal</col>
-      </row>
-      <row>
-        <col id="0">&gt;=</col>
-        <col id="1">80</col>
-        <col id="2" translatable="yes">Greater than or equal</col>
-      </row>
-      <row>
-        <col id="0">==</col>
-        <col id="1">80</col>
-        <col id="2" translatable="yes">Equal</col>
-      </row>
-      <row>
-        <col id="0">!=</col>
-        <col id="1">80</col>
-        <col id="2" translatable="yes">Not equal</col>
-      </row>
-      <row>
-        <col id="0">&amp;&amp;</col>
-        <col id="1">75</col>
-        <col id="2" translatable="yes">Logical and</col>
-      </row>
-      <row>
-        <col id="0">||</col>
-        <col id="1">70</col>
-        <col id="2" translatable="yes">Logical or</col>
-      </row>
-      <row>
-        <col id="0">=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Assignment</col>
-      </row>
-      <row>
-        <col id="0">+=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Sum-Assignment or String-Concatenation-Assignment</col>
-      </row>
-      <row>
-        <col id="0">-=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Difference-Assignment</col>
-      </row>
-      <row>
-        <col id="0">*=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Product-Assignment</col>
-      </row>
-      <row>
-        <col id="0">/=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Division-Assignment</col>
-      </row>
-      <row>
-        <col id="0">%=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Modulo-Assignment</col>
-      </row>
-      <row>
-        <col id="0">^=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Exponentiation-Assignment</col>
-      </row>
-      <row>
-        <col id="0">&amp;&amp;=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Logical-And-Assignment</col>
-      </row>
-      <row>
-        <col id="0">||=</col>
-        <col id="1">50</col>
-        <col id="2" translatable="yes">Logical-Or-Assignment</col>
-      </row>
-      <row>
-        <col id="0">,</col>
-        <col id="1">40</col>
-        <col id="2" translatable="yes">Aggregation</col>
-      </row>
-      <row>
-        <col id="0">;</col>
-        <col id="1">0</col>
-        <col id="2" translatable="yes">Expression Chaining</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="unary-operators">
-    <columns>
-      <!-- column-name operator -->
-      <column type="gchararray"/>
-      <!-- column-name precedence -->
-      <column type="gint"/>
-      <!-- column-name description -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">-</col>
-        <col id="1">110</col>
-        <col id="2" translatable="yes">Negation</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">!</col>
-        <col id="1">110</col>
-        <col id="2" translatable="yes">Logical not</col>
-      </row>
-    </data>
   </object>
 </interface>
