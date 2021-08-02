@@ -1,6 +1,6 @@
 use {
     crate::{get_obj, resource},
-    gio::{prelude::*, SimpleAction, SimpleActionGroup},
+    gio::{prelude::*, SettingsBindFlags, SettingsExt, SimpleAction, SimpleActionGroup},
     glib::clone,
     gtk::{
         prelude::*, AboutDialog, ApplicationWindow, Builder, Button, Clipboard, Entry,
@@ -25,11 +25,19 @@ pub struct Ui {
     save_dialog: FileChooserNative,
     edited: RefCell<bool>,
     path: RefCell<Option<PathBuf>>,
+    settings: gio::Settings,
 }
 
 impl Ui {
-    pub fn new() -> Rc<Self> {
+    pub fn new(settings: &gio::Settings) -> Rc<Self> {
         let b = Builder::from_resource(resource!("ui/main"));
+
+        settings.bind(
+            "ask-save-on-exit",
+            &get_obj!(b, gtk::Switch, "ask-save-switch"),
+            "active",
+            SettingsBindFlags::DEFAULT,
+        );
 
         let this = Rc::new(Self {
             main_window: get_obj!(b, "main-window"),
@@ -57,6 +65,7 @@ impl Ui {
             ),
             edited: RefCell::new(false),
             path: RefCell::new(None),
+            settings: settings.clone(),
         });
 
         let file_filter = FileFilter::new();
@@ -96,7 +105,7 @@ impl Ui {
         let open_action = SimpleAction::new("open", None);
         open_action.connect_activate(clone!(@strong this => move |_, _| {
             if this.stack.get_visible_child_name() == Some("math".into()) {
-                if *this.edited.borrow() {
+                if *this.edited.borrow() && this.settings.get_boolean("ask-save-on-exit") {
                     if this.ask_save_file() {
                         this.save_file();
                         this.open_file();
@@ -175,7 +184,10 @@ impl Ui {
     }
 
     pub fn quit(&self) {
-        if *self.edited.borrow() && self.ask_save_file() {
+        if *self.edited.borrow()
+            && self.settings.get_boolean("ask-save-on-exit")
+            && self.ask_save_file()
+        {
             self.save_file()
         }
     }

@@ -2,7 +2,7 @@
 
 <schemalist gettext-domain="MathExprEval">
 
-    <schema path="/net/olback/mathexpreval" id="net.olback.MathExprEval">
+    <schema path="/net/olback/mathexpreval/" id="net.olback.MathExprEval">
 
         <key type="b" name="ask-save-on-exit">
             <default>true</default>
@@ -11,5 +11,7 @@
                 Ask to save the document if it has been changed before closing.
             </description>
         </key>
+
+    </schema>
 
 </schemalist>
