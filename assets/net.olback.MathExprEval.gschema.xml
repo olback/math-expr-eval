@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schemalist gettext-domain="MathExprEval">
+
+    <schema path="/net/olback/mathexpreval" id="net.olback.MathExprEval">
+
+        <key type="b" name="ask-save-on-exit">
+            <default>true</default>
+            <summary>Ask to save before closing</summary>
+            <description>
+                Ask to save the document if it has been changed before closing.
+            </description>
+        </key>
+
+</schemalist>
